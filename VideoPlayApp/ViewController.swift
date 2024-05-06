@@ -11,14 +11,10 @@ import SnapKit
 class ViewController: UIViewController {
     
     var tableView = UITableView()
-    var videoDetails: [VideoDetails]?
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    var videoDetailsArr: [VideoDetails]? {
+        didSet {
+            tableView.reloadData()
+        }
     }
     
     override func viewDidLoad() {
@@ -36,7 +32,8 @@ class ViewController: UIViewController {
         tableView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        tableView.rowHeight = CGFloat(100)
+//        tableView.rowHeight = CGFloat(100)
+        tableView.allowsSelection = false
     }
     
     func fetchVideoDetails() {
@@ -44,24 +41,33 @@ class ViewController: UIViewController {
             do {
                 let videoData = try await APIManager.shared.fetchUrlData(url: APIManager.shared.url)
                 let videoDetail = APIManager.shared.decodeIntoVideoDetails(videoData)
-                self.videoDetails = videoDetail
+                self.videoDetailsArr = videoDetail
             } catch {
                 print("error: \(error)")
             }
         }
     }
+    
+    
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return videoDetailsArr?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell else { return UITableViewCell() }
-        cell.configureCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell,
+              let videoDetailsArr = self.videoDetailsArr
+        else { return UITableViewCell() }
+        
+        let videoDetails = videoDetailsArr[indexPath.row]
+        cell.configureCell(videoDetails)
         return cell
     }
     
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100 // 행 높이 설정
+    }
+
 }

@@ -30,11 +30,11 @@ class TableViewCell: UITableViewCell {
     }
 
     
-    func configureCell() {
+    func configureCell(_ videoDetails: VideoDetails) {
         setSubviews()
         setStackView()
-        setThumbnailImage()
-        setTitleLabel()
+        setThumbnailImage(videoDetails)
+        setTitleLabel(videoDetails)
     }
     
     func setSubviews() {
@@ -54,18 +54,24 @@ class TableViewCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 5
-        stackView.backgroundColor = .red
     }
     
-    func setThumbnailImage() {
+    func setThumbnailImage(_ videoDetails: VideoDetails) {
+        let imageURL = videoDetails.thumbnailUrl
         thumbnailImageView.contentMode = .scaleAspectFill
-        thumbnailImageView.backgroundColor = .yellow
-        thumbnailImageView.image = UIImage(systemName: "star")
-        print("star")
+        Task {
+            do {
+                let imageData = try await APIManager.shared.fetchUrlData(url: imageURL)
+                thumbnailImageView.image = UIImage(data: imageData)
+            } catch {
+                print("imageData error: \(error)")
+            }
+        }
     }
     
-    func setTitleLabel() {
-        titleLabel.text = "Example"
+    func setTitleLabel(_ videoDetails: VideoDetails) {
+        let title = videoDetails.title
+        titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 18, weight: .medium)
         titleLabel.numberOfLines = 0
     }
