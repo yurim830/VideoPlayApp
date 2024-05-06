@@ -31,6 +31,7 @@ class TableViewCell: UITableViewCell {
 
     
     func configureCell(_ videoDetails: VideoDetails) {
+        self.selectionStyle = .none
         setSubviews()
         setStackView()
         setThumbnailImage(videoDetails)

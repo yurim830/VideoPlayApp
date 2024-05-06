@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import AVKit
 import SnapKit
 
 class ViewController: UIViewController {
     
+    let playerController = AVPlayerViewController()
     var tableView = UITableView()
     var videoDetailsArr: [VideoDetails]? {
         didSet {
@@ -33,7 +35,6 @@ class ViewController: UIViewController {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
 //        tableView.rowHeight = CGFloat(100)
-        tableView.allowsSelection = false
     }
     
     func fetchVideoDetails() {
@@ -52,10 +53,12 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
+    // 셀 개수 설정
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return videoDetailsArr?.count ?? 0
     }
     
+    // 셀 설정
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell,
               let videoDetailsArr = self.videoDetailsArr
@@ -66,8 +69,17 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    // 행 높이 설정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100 // 행 높이 설정
+        return 100
     }
-
+    
+    // 셀 터치 시 비디오 재생
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let videoDetailsArr = self.videoDetailsArr else { return }
+        let videoURL = videoDetailsArr[indexPath.row].videoUrl
+        let player = AVPlayer(url: videoURL)
+        playerController.player = player
+        self.present(playerController, animated: true)
+    }
 }
