@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import SnapKit
 
 class TableViewCell: UITableViewCell {
     
+    static let identifier = String(describing: TableViewCell.self)
+    
     var stackView: UIStackView {
         let stackView = UIStackView()
+        contentView.addSubview(stackView)
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.backgroundColor = .red
@@ -19,10 +23,14 @@ class TableViewCell: UITableViewCell {
     var thumbnailImageView = UIImageView()
     var titleLabel = UILabel()
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -30,9 +38,8 @@ class TableViewCell: UITableViewCell {
 
     func setConstraints() {
         // stackView
-        contentView.addSubview(stackView)
         stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.edges.equalTo(contentView)
         }
         
         // stackView addArrangedSubview
