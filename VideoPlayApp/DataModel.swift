@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct VideoModel: Decodable {
+struct VideoDetails: Decodable {
     let title: String
     let thumbnailUrl: URL
     let videoUrl: URL

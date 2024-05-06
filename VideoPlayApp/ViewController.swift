@@ -11,12 +11,22 @@ import SnapKit
 class ViewController: UIViewController {
     
     var tableView = UITableView()
-
+    var videoDetails: [VideoDetails]?
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchVideoDetails()
+        setTableViewConstraints()
         tableView.dataSource = self
         tableView.delegate = self
-        setTableViewConstraints()
     }
     
     func setTableViewConstraints() {
@@ -27,6 +37,18 @@ class ViewController: UIViewController {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
         tableView.rowHeight = CGFloat(100)
+    }
+    
+    func fetchVideoDetails() {
+        Task {
+            do {
+                let videoData = try await APIManager.shared.fetchUrlData(url: APIManager.shared.url)
+                let videoDetail = APIManager.shared.decodeIntoVideoDetails(videoData)
+                self.videoDetails = videoDetail
+            } catch {
+                print("error: \(error)")
+            }
+        }
     }
 }
 
