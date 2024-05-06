@@ -12,14 +12,7 @@ class TableViewCell: UITableViewCell {
     
     static let identifier = String(describing: TableViewCell.self)
     
-    var stackView: UIStackView {
-        let stackView = UIStackView()
-        contentView.addSubview(stackView)
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.backgroundColor = .red
-        return stackView
-    }
+    var stackView = UIStackView()
     var thumbnailImageView = UIImageView()
     var titleLabel = UILabel()
     
@@ -36,8 +29,17 @@ class TableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func setConstraints() {
+    
+    func configureCell() {
+        setSubviews()
+        setStackView()
+        setThumbnailImage()
+        setTitleLabel()
+    }
+    
+    func setSubviews() {
         // stackView
+        contentView.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.edges.equalTo(contentView)
         }
@@ -48,4 +50,23 @@ class TableViewCell: UITableViewCell {
         }
     }
     
+    func setStackView() {
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 5
+        stackView.backgroundColor = .red
+    }
+    
+    func setThumbnailImage() {
+        thumbnailImageView.contentMode = .scaleAspectFill
+        thumbnailImageView.backgroundColor = .yellow
+        thumbnailImageView.image = UIImage(systemName: "star")
+        print("star")
+    }
+    
+    func setTitleLabel() {
+        titleLabel.text = "Example"
+        titleLabel.font = .systemFont(ofSize: 18, weight: .medium)
+        titleLabel.numberOfLines = 0
+    }
 }

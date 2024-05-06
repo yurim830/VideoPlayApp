@@ -26,6 +26,7 @@ class ViewController: UIViewController {
         tableView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
+        tableView.rowHeight = CGFloat(100)
     }
 }
 
@@ -36,7 +37,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell else { return UITableViewCell() }
-        cell.setConstraints()
+        cell.configureCell()
         return cell
     }
     
