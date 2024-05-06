@@ -17,7 +17,6 @@
 		1A62B8862BE8B67F000CB8AD /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A62B8852BE8B67F000CB8AD /* TableViewCell.swift */; };
 		1A62B8882BE90DE7000CB8AD /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A62B8872BE90DE7000CB8AD /* APIManager.swift */; };
 		1A62B88A2BE91244000CB8AD /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A62B8892BE91244000CB8AD /* DataModel.swift */; };
-		1A62B88E2BE94571000CB8AD /* AVViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A62B88D2BE94571000CB8AD /* AVViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		1A62B8852BE8B67F000CB8AD /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		1A62B8872BE90DE7000CB8AD /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		1A62B8892BE91244000CB8AD /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
-		1A62B88D2BE94571000CB8AD /* AVViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,19 +64,42 @@
 		1A62B86B2BE893A5000CB8AD /* VideoPlayApp */ = {
 			isa = PBXGroup;
 			children = (
+				1ADF02802BE9487800311F97 /* Model */,
+				1ADF027F2BE9486500311F97 /* Network */,
+				1ADF027E2BE9483100311F97 /* View */,
 				1A62B86C2BE893A5000CB8AD /* AppDelegate.swift */,
 				1A62B86E2BE893A5000CB8AD /* SceneDelegate.swift */,
-				1A62B8702BE893A5000CB8AD /* ViewController.swift */,
-				1A62B88D2BE94571000CB8AD /* AVViewController.swift */,
-				1A62B8852BE8B67F000CB8AD /* TableViewCell.swift */,
-				1A62B8872BE90DE7000CB8AD /* APIManager.swift */,
-				1A62B8892BE91244000CB8AD /* DataModel.swift */,
 				1A62B8722BE893A5000CB8AD /* Main.storyboard */,
 				1A62B8752BE893A7000CB8AD /* Assets.xcassets */,
 				1A62B8772BE893A7000CB8AD /* LaunchScreen.storyboard */,
 				1A62B87A2BE893A7000CB8AD /* Info.plist */,
 			);
 			path = VideoPlayApp;
+			sourceTree = "<group>";
+		};
+		1ADF027E2BE9483100311F97 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1A62B8702BE893A5000CB8AD /* ViewController.swift */,
+				1A62B8852BE8B67F000CB8AD /* TableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1ADF027F2BE9486500311F97 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				1A62B8872BE90DE7000CB8AD /* APIManager.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		1ADF02802BE9487800311F97 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1A62B8892BE91244000CB8AD /* DataModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,7 +183,6 @@
 				1A62B8862BE8B67F000CB8AD /* TableViewCell.swift in Sources */,
 				1A62B8882BE90DE7000CB8AD /* APIManager.swift in Sources */,
 				1A62B86D2BE893A5000CB8AD /* AppDelegate.swift in Sources */,
-				1A62B88E2BE94571000CB8AD /* AVViewController.swift in Sources */,
 				1A62B86F2BE893A5000CB8AD /* SceneDelegate.swift in Sources */,
 				1A62B88A2BE91244000CB8AD /* DataModel.swift in Sources */,
 			);
