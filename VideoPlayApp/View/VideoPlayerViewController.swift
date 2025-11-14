@@ -12,10 +12,14 @@ class VideoPlayerViewController: UIViewController {
 
     // MARK: - Properties
 
-    private var skipSeconds: Double = 10
-    private var isControlHidden: Bool = false
+    private var skipUnit: Double = 10
+
+    private var skipUITimer: Timer?
     private var tapCount: Int = 0
-    private var tapTimer: Timer?
+    private var accumulatedSkip: Double = 0
+
+    private var isFirstTap = true
+    private var isControlHidden: Bool = false
 
 
     // MARK: - UI Properties
@@ -101,25 +105,11 @@ private extension VideoPlayerViewController {
 private extension VideoPlayerViewController {
 
     @objc func didTapLeft() {
-        tapCount -= 1
-        
-        tapTimer?.invalidate()
-        tapTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
-            guard let self else { return }
-            handleTapCount(tapCount)
-            tapCount = 0
-        }
+        handleTap(isLeft: true)
     }
 
     @objc func didTapRight() {
-        tapCount += 1
-        
-        tapTimer?.invalidate()
-        tapTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
-            guard let self else { return }
-            handleTapCount(tapCount)
-            tapCount = 0
-        }
+        handleTap(isLeft: false)
     }
 
     @objc func openSettings() {
@@ -130,13 +120,13 @@ private extension VideoPlayerViewController {
         alert.addTextField { textField in
             textField.placeholder = "예: 5"
             textField.keyboardType = .numberPad
-            textField.text = "\(Int(self.skipSeconds))"
+            textField.text = "\(Int(self.skipUnit))"
         }
 
         let ok = UIAlertAction(title: "확인", style: .default) { _ in
             if let text = alert.textFields?.first?.text,
                let value = Double(text) {
-                self.skipSeconds = value
+                self.skipUnit = value
             }
         }
 
@@ -184,16 +174,53 @@ private extension VideoPlayerViewController {
         player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
     }
 
-    func handleTapCount(_ count: Int) {
-        print("count: \(count)")
-        if abs(count) == 1 {
-            UIView.animate(withDuration: 0.2) { [weak self] in
-                guard let self else { return }
-                isControlHidden.toggle()
-                controlView.hideButtons(isControlHidden)
-            }
+    func handleTap(isLeft: Bool) {
+        // 즉각적으로 skip UI 업데이트
+        let delta = isLeft ? -skipUnit : +skipUnit
+        tapCount += isLeft ? -1 : +1
+
+        if isFirstTap {
+            // 첫 탭은 싱글 후보 → UI 업데이트 X
+            isFirstTap = false
         } else {
-            seek(by: Double(count - 1) * skipSeconds)
+            // 두 번째 탭부터는 즉각 UI 업데이트
+            accumulatedSkip += delta
+            updateSkipUI(accumulatedSkip)
+        }
+
+        // 타이머 리셋
+        skipUITimer?.invalidate()
+        skipUITimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+            self?.processTapResult()
         }
     }
+
+    func processTapResult() {
+        if abs(tapCount) == 1 {
+            toggleControlVisibility()
+        } else {
+            let skipUnits = abs(tapCount) - 1
+            let direction: Double = tapCount > 0 ? 1 : -1
+            let finalSkip = Double(skipUnits) * skipUnit * direction
+
+            seek(by: finalSkip)
+        }
+
+        // Reset
+        tapCount = 0
+        isFirstTap = true
+        accumulatedSkip = 0
+    }
+
+    func updateSkipUI(_ value: Double) {
+        controlView.setSkipLabel(value)
+    }
+
+    func toggleControlVisibility() {
+        isControlHidden.toggle()
+        UIView.animate(withDuration: 0.2) {
+            self.controlView.hideButtons(self.isControlHidden)
+        }
+    }
+
 }
