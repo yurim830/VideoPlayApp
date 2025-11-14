@@ -46,6 +46,7 @@ class VideoPlayerViewController: UIViewController {
 
         setHierarchy()
         setLayout()
+        setStyle()
         setGesture()
     }
 
@@ -73,6 +74,10 @@ private extension VideoPlayerViewController {
         }
 
         playerLayer.frame = view.bounds
+    }
+
+    func setStyle() {
+        controlView.hideButtons(isControlHidden)
     }
 
     func setGesture() {

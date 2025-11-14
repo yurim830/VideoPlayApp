@@ -98,6 +98,8 @@ extension VideoControlView {
     func hideButtons(_ isHidden: Bool) {
         [settingsButton, playPauseButton].forEach {
             $0.isHidden = isHidden
+            self.backgroundColor = .black.withAlphaComponent(isHidden ? 0.0 : 0.7)
+
         }
     }
 
