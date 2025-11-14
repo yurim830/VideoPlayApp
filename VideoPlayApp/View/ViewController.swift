@@ -10,8 +10,7 @@ import AVKit
 import SnapKit
 
 class ViewController: UIViewController {
-    
-    let playerController = AVPlayerViewController()
+
     var tableView = UITableView()
     var videoDetailsArr: [VideoDetails]? {
         didSet {
@@ -34,7 +33,6 @@ class ViewController: UIViewController {
         tableView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
-//        tableView.rowHeight = CGFloat(100)
     }
     
     func fetchVideoDetails() {
@@ -79,7 +77,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         guard let videoDetailsArr = self.videoDetailsArr else { return }
         let videoURL = videoDetailsArr[indexPath.row].videoUrl
         let player = AVPlayer(url: videoURL)
-        playerController.player = player
-        self.present(playerController, animated: true)
+        let vc = VideoPlayerViewController(player: player)
+        
+        self.present(vc, animated: true)
     }
 }
