@@ -16,6 +16,8 @@ class VideoControlView: UIView {
     
     let leftView = UIView()
     let rightView = UIView()
+    let leftSkipLabel = UILabel()
+    let rightSkipLabel = UILabel()
     let settingsButton = UIButton(type: .system)
     let playPauseButton = UIButton(type: .system)
 
@@ -42,6 +44,8 @@ private extension VideoControlView {
     
     func setHierarchy() {
         [leftView, rightView, settingsButton, playPauseButton].forEach { self.addSubview($0) }
+        leftView.addSubview(leftSkipLabel)
+        rightView.addSubview(rightSkipLabel)
     }
 
     func setLayout() {
@@ -55,6 +59,14 @@ private extension VideoControlView {
             $0.verticalEdges.equalToSuperview()
             $0.trailing.equalToSuperview()
             $0.width.equalTo(ScreenUtils.width / 2)
+        }
+
+        leftSkipLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+
+        rightSkipLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
 
         settingsButton.snp.makeConstraints {
@@ -78,6 +90,13 @@ private extension VideoControlView {
             $0.isUserInteractionEnabled = true
             $0.backgroundColor = .clear
         }
+
+        [leftSkipLabel, rightSkipLabel].forEach {
+            $0.textColor = .white
+            $0.font = .systemFont(ofSize: 24, weight: .bold)
+            $0.layer.opacity = 0
+        }
+
         settingsButton.do {
             $0.tintColor = .white
             $0.setImage(UIImage(systemName: "gearshape.fill"), for: .normal)
@@ -103,4 +122,20 @@ extension VideoControlView {
         }
     }
 
+    func setSkipLabel(_ time: Double) {
+        let absTime: Double = abs(time)
+        if time < 0 {
+            leftSkipLabel.text = "- " + String(absTime)
+            leftSkipLabel.layer.opacity = 1
+        } else {
+            rightSkipLabel.text = "+ " + String(absTime)
+            rightSkipLabel.layer.opacity = 1
+        }
+        
+        UIView.animate(withDuration: 1.0) {
+            [self.leftSkipLabel, self.rightSkipLabel].forEach {
+                $0.layer.opacity = 0.0
+            }
+        }
+    }
 }
