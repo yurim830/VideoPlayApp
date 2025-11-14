@@ -120,6 +120,7 @@
 			name = VideoPlayApp;
 			packageProductDependencies = (
 				1A62B8812BE8B08F000CB8AD /* SnapKit */,
+				15280F4D2EC71F5700B4F4AC /* Then */,
 			);
 			productName = VideoPlayApp;
 			productReference = 1A62B8692BE893A5000CB8AD /* VideoPlayApp.app */;
@@ -151,6 +152,7 @@
 			mainGroup = 1A62B8602BE893A5000CB8AD;
 			packageReferences = (
 				1A62B8802BE8B08F000CB8AD /* XCRemoteSwiftPackageReference "SnapKit" */,
+				15280F4C2EC71F5700B4F4AC /* XCRemoteSwiftPackageReference "Then" */,
 			);
 			productRefGroup = 1A62B86A2BE893A5000CB8AD /* Products */;
 			projectDirPath = "";
@@ -336,6 +338,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L995XJC5CV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoPlayApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -363,6 +366,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L995XJC5CV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoPlayApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -407,6 +411,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		15280F4C2EC71F5700B4F4AC /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		1A62B8802BE8B08F000CB8AD /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -418,6 +430,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		15280F4D2EC71F5700B4F4AC /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15280F4C2EC71F5700B4F4AC /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
 		1A62B8812BE8B08F000CB8AD /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1A62B8802BE8B08F000CB8AD /* XCRemoteSwiftPackageReference "SnapKit" */;
