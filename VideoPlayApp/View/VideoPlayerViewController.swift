@@ -14,6 +14,8 @@ class VideoPlayerViewController: UIViewController {
 
     private var skipSeconds: Double = 10
     private var isControlHidden: Bool = false
+    private var tapCount: Int = 0
+    private var tapTimer: Timer?
 
 
     // MARK: - UI Properties
@@ -74,19 +76,9 @@ private extension VideoPlayerViewController {
     }
 
     func setGesture() {
-        // 싱글 탭 제스쳐
-        let singleTap = UITapGestureRecognizer(target: self, action: #selector(didSingleTap))
-        [controlView.leftView, controlView.rightView].forEach {
-            $0.addGestureRecognizer(singleTap)
-        }
-        
-        // 더블 탭 제스처
-        let leftDoubleTap = UITapGestureRecognizer(target: self, action: #selector(didDoubleTapLeft))
-        leftDoubleTap.numberOfTapsRequired = 2
-
-        let rightDoubleTap = UITapGestureRecognizer(target: self, action: #selector(didDoubleTapRight))
-        rightDoubleTap.numberOfTapsRequired = 2
-
+        // 탭 제스처
+        let leftDoubleTap = UITapGestureRecognizer(target: self, action: #selector(didTapLeft))
+        let rightDoubleTap = UITapGestureRecognizer(target: self, action: #selector(didTapRight))
         controlView.leftView.addGestureRecognizer(leftDoubleTap)
         controlView.rightView.addGestureRecognizer(rightDoubleTap)
         
@@ -103,20 +95,26 @@ private extension VideoPlayerViewController {
 
 private extension VideoPlayerViewController {
 
-    @objc func didSingleTap() {
-        UIView.animate(withDuration: 0.2) { [weak self] in
+    @objc func didTapLeft() {
+        tapCount -= 1
+        
+        tapTimer?.invalidate()
+        tapTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
             guard let self else { return }
-            isControlHidden.toggle()
-            controlView.hideButtons(isControlHidden)
+            handleTapCount(tapCount)
+            tapCount = 0
         }
     }
 
-    @objc func didDoubleTapLeft() {
-        seek(by: -10)
-    }
-
-    @objc func didDoubleTapRight() {
-        seek(by: 10)
+    @objc func didTapRight() {
+        tapCount += 1
+        
+        tapTimer?.invalidate()
+        tapTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
+            guard let self else { return }
+            handleTapCount(tapCount)
+            tapCount = 0
+        }
     }
 
     @objc func openSettings() {
@@ -181,4 +179,16 @@ private extension VideoPlayerViewController {
         player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
     }
 
+    func handleTapCount(_ count: Int) {
+        print("count: \(count)")
+        if abs(count) == 1 {
+            UIView.animate(withDuration: 0.2) { [weak self] in
+                guard let self else { return }
+                isControlHidden.toggle()
+                controlView.hideButtons(isControlHidden)
+            }
+        } else {
+            seek(by: Double(count - 1) * skipSeconds)
+        }
+    }
 }
