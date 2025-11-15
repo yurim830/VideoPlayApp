@@ -21,6 +21,7 @@ class VideoControlView: UIView {
     let settingsButton = UIButton(type: .system)
     let playPauseButton = UIButton(type: .system)
     let loadingIndicator = UIActivityIndicatorView(style: .large)
+    let xButton = UIButton()
 
 
     // MARK: - init
@@ -44,7 +45,7 @@ class VideoControlView: UIView {
 private extension VideoControlView {
     
     func setHierarchy() {
-        [leftView, rightView, settingsButton, playPauseButton, loadingIndicator].forEach { self.addSubview($0) }
+        [leftView, rightView, settingsButton, xButton, playPauseButton, loadingIndicator].forEach { self.addSubview($0) }
         leftView.addSubview(leftSkipLabel)
         rightView.addSubview(rightSkipLabel)
     }
@@ -72,6 +73,11 @@ private extension VideoControlView {
 
         settingsButton.snp.makeConstraints {
             $0.trailing.top.equalTo(self.safeAreaLayoutGuide).inset(20)
+            $0.size.equalTo(60)
+        }
+
+        xButton.snp.makeConstraints {
+            $0.leading.top.equalTo(self.safeAreaLayoutGuide).inset(20)
             $0.size.equalTo(60)
         }
 
@@ -108,6 +114,14 @@ private extension VideoControlView {
             $0.setImage(UIImage(systemName: "gearshape.fill"), for: .normal)
         }
 
+        xButton.do {
+            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold)
+            $0.setPreferredSymbolConfiguration(config, forImageIn: .normal)
+            $0.setImage(UIImage(systemName: "xmark"), for: .normal)
+            $0.tintColor = .white
+            
+        }
+
         playPauseButton.do {
             $0.tintColor = .white
             $0.setImage(UIImage(systemName: "pause.fill"), for: .normal)
@@ -121,10 +135,12 @@ private extension VideoControlView {
 extension VideoControlView {
 
     func hideButtons(_ isHidden: Bool) {
-        [settingsButton, playPauseButton].forEach {
-            $0.isHidden = isHidden
+        UIView.animate(withDuration: 0.4) {
+            [self.settingsButton, self.xButton, self.playPauseButton].forEach {
+                $0.layer.opacity = isHidden ? 0.0 : 1.0
+                $0.isHidden = isHidden
+            }
             self.backgroundColor = .black.withAlphaComponent(isHidden ? 0.0 : 0.7)
-
         }
     }
 

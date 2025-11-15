@@ -31,7 +31,6 @@ class VideoPlayerViewController: UIViewController {
     private var playerLayer: AVPlayerLayer
     private var playerItem: AVPlayerItem
     private let controlView = VideoControlView()
-    private let xButton = UIButton()
 
 
     // MARK: - init
@@ -86,17 +85,12 @@ private extension VideoPlayerViewController {
 
     func setHierarchy() {
         view.layer.addSublayer(playerLayer)
-        [controlView, xButton].forEach { view.addSubview($0) }
+        view.addSubview(controlView)
     }
 
     func setLayout() {
         controlView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-        }
-
-        xButton.snp.makeConstraints {
-            $0.leading.top.equalTo(view.safeAreaLayoutGuide).inset(20)
-            $0.size.equalTo(60)
         }
     }
 
@@ -105,14 +99,6 @@ private extension VideoPlayerViewController {
         playerLayer.videoGravity = .resizeAspect
 
         controlView.hideButtons(isControlHidden)
-
-        xButton.do {
-            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold)
-            $0.setPreferredSymbolConfiguration(config, forImageIn: .normal)
-            $0.setImage(UIImage(systemName: "xmark"), for: .normal)
-            $0.tintColor = .white
-            
-        }
     }
 
     func setGesture() {
@@ -129,7 +115,7 @@ private extension VideoPlayerViewController {
         controlView.playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
 
         // x 버튼
-        xButton.addTarget(self, action: #selector(didTapXButton), for: .touchUpInside)
+        controlView.xButton.addTarget(self, action: #selector(didTapXButton), for: .touchUpInside)
     }
 
 }
