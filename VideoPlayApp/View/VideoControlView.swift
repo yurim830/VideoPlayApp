@@ -20,6 +20,7 @@ class VideoControlView: UIView {
     let rightSkipLabel = UILabel()
     let settingsButton = UIButton(type: .system)
     let playPauseButton = UIButton(type: .system)
+    let loadingIndicator = UIActivityIndicatorView(style: .large)
 
 
     // MARK: - init
@@ -43,7 +44,7 @@ class VideoControlView: UIView {
 private extension VideoControlView {
     
     func setHierarchy() {
-        [leftView, rightView, settingsButton, playPauseButton].forEach { self.addSubview($0) }
+        [leftView, rightView, settingsButton, playPauseButton, loadingIndicator].forEach { self.addSubview($0) }
         leftView.addSubview(leftSkipLabel)
         rightView.addSubview(rightSkipLabel)
     }
@@ -70,11 +71,16 @@ private extension VideoControlView {
         }
 
         settingsButton.snp.makeConstraints {
-            $0.trailing.top.equalToSuperview().inset(20)
+            $0.trailing.top.equalTo(self.safeAreaLayoutGuide).inset(20)
             $0.size.equalTo(60)
         }
 
         playPauseButton.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.size.equalTo(60)
+        }
+
+        loadingIndicator.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(60)
         }
