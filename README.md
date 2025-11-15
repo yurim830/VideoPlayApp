@@ -58,6 +58,7 @@ VideoPlayApp/
 - 풀스크린 대응
 - 상태 변화에 따른 즉각적인 UI 반응
 - 재생/정지, 시킹 등 이벤트 처리 모듈화
+- 기기 회전(Orientation Change)에 따른 레이아웃 및 UI 자동 조정
 
 ---
 
@@ -65,6 +66,7 @@ VideoPlayApp/
 
 | GIF |
 |:--:|
+| - 화면 회전, <br> - 싱글탭: control show/hide <br> - 더블탭 이상: 건너뛰기 |
 |<img src="https://github.com/user-attachments/assets/d1a8e8ce-4a7d-4e7a-a8a8-1487ad671087" width="250">|
 
 
