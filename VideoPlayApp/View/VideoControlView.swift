@@ -144,4 +144,9 @@ extension VideoControlView {
             }
         }
     }
+
+    func setPlayPauseButtonImage(isPlaying: Bool) {
+        let playPauseImg = UIImage(systemName: isPlaying ? "pause.fill" : "play.fill")
+        playPauseButton.setImage(playPauseImg, for: .normal)
+    }
 }

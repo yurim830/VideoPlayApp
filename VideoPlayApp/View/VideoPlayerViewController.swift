@@ -7,10 +7,13 @@
 
 import UIKit
 import AVFoundation
+import Combine
 
 class VideoPlayerViewController: UIViewController {
 
     // MARK: - Properties
+
+    private var cancellables = Set<AnyCancellable>()
 
     private var skipUnit: Double = 10
 
@@ -26,15 +29,16 @@ class VideoPlayerViewController: UIViewController {
 
     private let player: AVPlayer
     private var playerLayer: AVPlayerLayer
+    private var playerItem: AVPlayerItem
     private let controlView = VideoControlView()
 
 
     // MARK: - init
 
-    init(player: AVPlayer) {
-        self.player = player
+    init(_ url: URL) {
+        self.playerItem = AVPlayerItem(url: url)
+        self.player = AVPlayer(playerItem: playerItem)
         self.playerLayer = AVPlayerLayer(player: player)
-
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -52,12 +56,24 @@ class VideoPlayerViewController: UIViewController {
         setLayout()
         setStyle()
         setGesture()
+        bindLoadingState()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        player.play()
+        let isPlaying = player.timeControlStatus == .playing
+        let playPauseImg = UIImage(systemName: isPlaying ? "play.fill" : "pause.fill")
+        controlView.playPauseButton.setImage(playPauseImg, for: .normal)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        playerLayer.frame = view.bounds
+        controlView.snp.updateConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
 
 }
@@ -76,11 +92,12 @@ private extension VideoPlayerViewController {
         controlView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-
-        playerLayer.frame = view.bounds
     }
 
     func setStyle() {
+        view.backgroundColor = .black
+        playerLayer.videoGravity = .resizeAspect
+
         controlView.hideButtons(isControlHidden)
     }
 
@@ -97,6 +114,7 @@ private extension VideoPlayerViewController {
         // 재생/멈춤 버튼
         controlView.playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
     }
+
 }
 
 
@@ -190,7 +208,7 @@ private extension VideoPlayerViewController {
 
         // 타이머 리셋
         skipUITimer?.invalidate()
-        skipUITimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+        skipUITimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
             self?.processTapResult()
         }
     }
@@ -221,6 +239,54 @@ private extension VideoPlayerViewController {
         UIView.animate(withDuration: 0.2) {
             self.controlView.hideButtons(self.isControlHidden)
         }
+    }
+
+}
+
+
+// MARK: - Observation
+
+private extension VideoPlayerViewController {
+
+    func bindLoadingState() {
+        let statusPublisher: AnyPublisher<Bool, Never> = playerItem
+            .publisher(for: \.status, options: [.initial, .new])
+            .map { $0 == .readyToPlay }
+            .eraseToAnyPublisher()
+
+        let keepUpPublisher: AnyPublisher<Bool, Never> = playerItem
+            .publisher(for: \.isPlaybackLikelyToKeepUp, options: [.initial, .new])
+            .map { $0 }
+            .eraseToAnyPublisher()
+
+        let notEmptyPublisher: AnyPublisher<Bool, Never> = playerItem
+            .publisher(for: \.isPlaybackBufferEmpty, options: [.initial, .new])
+            .map { !$0 }
+            .eraseToAnyPublisher()
+
+        Publishers.CombineLatest3(statusPublisher, keepUpPublisher, notEmptyPublisher)
+            .map { (isReady: Bool, keepUp: Bool, notEmpty: Bool) -> Bool in
+                return isReady && keepUp && notEmpty
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoaded in
+                guard let self = self else { return }
+                if isLoaded {
+                    self.controlView.loadingIndicator.stopAnimating()
+                    self.controlView.playPauseButton.alpha = 1.0
+                    self.controlView.playPauseButton.isHidden = false
+                    self.player.play()
+                    self.controlView.setPlayPauseButtonImage(isPlaying: true)
+                } else {
+                    // 로딩 중
+                    self.controlView.playPauseButton.alpha = 0.0
+                    self.controlView.playPauseButton.isHidden = true
+                    self.controlView.loadingIndicator.startAnimating()
+                    self.player.pause()
+                    self.controlView.setPlayPauseButtonImage(isPlaying: false)
+                }
+            })
+            .store(in: &cancellables)
     }
 
 }
