@@ -52,15 +52,13 @@ private extension VideoControlView {
 
     func setLayout() {
         leftView.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
-            $0.leading.equalToSuperview()
-            $0.width.equalTo(ScreenUtils.width / 2)
+            $0.leading.verticalEdges.equalToSuperview()
+            $0.trailing.equalTo(self.snp.centerX)
         }
 
         rightView.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
-            $0.trailing.equalToSuperview()
-            $0.width.equalTo(ScreenUtils.width / 2)
+            $0.trailing.verticalEdges.equalToSuperview()
+            $0.leading.equalTo(self.snp.centerX)
         }
 
         leftSkipLabel.snp.makeConstraints {
@@ -72,12 +70,14 @@ private extension VideoControlView {
         }
 
         settingsButton.snp.makeConstraints {
-            $0.trailing.top.equalTo(self.safeAreaLayoutGuide).inset(20)
+            $0.top.equalTo(self.safeAreaLayoutGuide)
+            $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(10)
             $0.size.equalTo(60)
         }
 
         xButton.snp.makeConstraints {
-            $0.leading.top.equalTo(self.safeAreaLayoutGuide).inset(20)
+            $0.top.equalTo(self.safeAreaLayoutGuide)
+            $0.leading.equalTo(self.safeAreaLayoutGuide).inset(10)
             $0.size.equalTo(60)
         }
 
