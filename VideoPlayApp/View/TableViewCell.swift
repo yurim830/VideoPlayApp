@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class TableViewCell: UITableViewCell {
     
@@ -54,12 +56,15 @@ class TableViewCell: UITableViewCell {
     func setStackView() {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        stackView.spacing = 5
+        stackView.spacing = 10
     }
     
     func setThumbnailImage(_ videoDetails: VideoDetails) {
         let imageURL = videoDetails.thumbnailUrl
-        thumbnailImageView.contentMode = .scaleAspectFill
+        thumbnailImageView.do {
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
+        }
         Task {
             do {
                 let imageData = try await APIManager.shared.fetchUrlData(url: imageURL)
