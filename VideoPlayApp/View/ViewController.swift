@@ -76,9 +76,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let videoDetailsArr = self.videoDetailsArr else { return }
         let videoURL = videoDetailsArr[indexPath.row].videoUrl
-        let player = AVPlayer(url: videoURL)
-        let vc = VideoPlayerViewController(player: player)
-        
+        let vc = VideoPlayerViewController(videoURL)
+        vc.modalPresentationStyle = .overFullScreen
         self.present(vc, animated: true)
     }
 }
